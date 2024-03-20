@@ -7,29 +7,29 @@ import (
     "strconv"
 )
 
-func main() {
-    file, err := os.Open("data.txt")
+func readFile(myFile string) string {
+    file, err := os.Open(myFile)
     if err != nil {
-        fmt.Println("Error opening the file")
-        return
+        panic("Error opening the file")
     }
     defer file.Close()
 
     stat, err := file.Stat()
     if err != nil {
-        fmt.Println("Error getting file size")
-        return
+        panic("Error getting file size")
     }
-    
+
     bs := make([]byte, stat.Size())
     _, err = file.Read(bs)
     if err != nil {
-        fmt.Println("Error reading the file")
-        return
+        panic("Error reading the file")
     }
 
-    data := strings.Split(string(bs), "\n")
-    
+    content := string(bs)
+    return content
+}
+
+func getMostCalories(data []string) int {
     mostCalories := 0
     currentCalories := 0
 
@@ -50,5 +50,13 @@ func main() {
         currentCalories += calorie
     }
 
+    return mostCalories
+}
+
+func main() {
+    fileContent := readFile("data.txt")
+    data := strings.Split(fileContent, "\n")
+    
+    mostCalories := getMostCalories(data)
     fmt.Println("The most calories being carried are ", mostCalories)
 }
